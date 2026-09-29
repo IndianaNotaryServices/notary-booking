@@ -531,8 +531,9 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="numDocs">Number of Documents *</label>
-                    <input type="number" id="numDocs" name="Number of Documents" min="1" value="1" required>
+                    <label for="numDocs">Estimated Number of Notarial Acts *</label>
+                    <input type="number" id="numDocs" name="Estimated Number of Notarial Acts" min="1" value="1" required>
+                    <div class="distance-calc"><p>This is an estimate for booking purposes. The final notarization charge depends on the actual number of notarial acts performed.</p></div>
                 </div>
             </div>
 
@@ -599,12 +600,13 @@
                         <strong>Venmo (Preferred)</strong>
                     </label>
                 </div>
-                <div class="payment-option" data-method="cash">
+                <div class="payment-option" data-method="card">
                     <label>
-                        <input type="radio" name="Payment Method" value="Cash">
-                        <strong>Cash at Time of Service</strong>
+                        <input type="radio" name="Payment Method" value="Credit/Debit Card">
+                        <strong>Credit/Debit Card — Secure payment through Square</strong>
                     </label>
                 </div>
+                <div class="distance-calc"><p><strong>Cash is not accepted.</strong> Payment is made electronically after your appointment time is approved.</p></div>
             </div>
 
             <input type="hidden" id="submittedTravelFee" name="Estimated Travel Fee" value="$0.00">
@@ -713,7 +715,7 @@
             }
 
             if (!numDocs || numDocs < 1) {
-                errorDiv.textContent = 'Number of documents must be at least 1';
+                errorDiv.textContent = 'Estimated number of notarial acts must be at least 1';
                 errorDiv.style.display = 'block';
                 return false;
             }
@@ -808,7 +810,7 @@
                     <span class="detail-value">${docType}</span>
                 </div>
                 <div class="detail-item">
-                    <span class="detail-label">Number of Documents:</span>
+                    <span class="detail-label">Estimated Notarial Acts:</span>
                     <span class="detail-value">${numDocs}</span>
                 </div>
                 <div class="detail-item">
@@ -837,15 +839,16 @@
                         <div>$${window.bookingCost.total.toFixed(2)}</div>
                         <a href="https://venmo.com/KalieDTRE" target="_blank">Open Venmo</a>
                     </div>
-                    <p style="font-size: 13px; color: #999; margin-top: 12px;">Please wait for appointment confirmation before sending payment.</p>
+                    <p style="font-size: 13px; color: #999; margin-top: 12px;">Please wait for appointment approval before sending payment. Your appointment is secured after payment is completed.</p>
                 `;
             } else {
                 paymentHTML = `
-                    <div class="venmo-payment" style="background: linear-gradient(135deg, #27ae60 0%, #1e8449 100%);">
-                        <div>Cash accepted at time of service</div>
+                    <div class="venmo-payment">
+                        <div>Credit/Debit Card — Square</div>
                         <div class="venmo-username">$${window.bookingCost.total.toFixed(2)}</div>
-                        <div style="font-size: 13px; margin-top: 8px;">Pay upon arrival at your appointment</div>
+                        <div style="font-size: 13px; margin-top: 8px;">A secure card-payment link will be provided after your appointment time is approved.</div>
                     </div>
+                    <p style="font-size: 13px; color: #999; margin-top: 12px;">For your security, card information is never entered directly on this booking page.</p>
                 `;
             }
 
