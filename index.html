@@ -615,7 +615,7 @@
             <!-- Action Buttons -->
             <div class="button-group">
                 <button type="button" class="btn-secondary" onclick="resetForm()">Clear</button>
-                <button type="button" class="btn-primary" onclick="submitBooking()">Submit Appointment Request</button>
+                <button type="submit" class="btn-primary">Submit Appointment Request</button>
             </div>
         </div>
 
@@ -748,115 +748,12 @@
             return true;
         }
 
-        function submitBooking() {
-            if (!validateForm()) {
-                return;
-            }
-
-            const name = document.getElementById('name').value;
-            const phone = document.getElementById('phone').value;
-            const email = document.getElementById('email').value;
-            const docType = document.getElementById('docType').value;
-            const numDocs = document.getElementById('numDocs').value;
-            const address = document.getElementById('address').value;
-            const distance = document.getElementById('distance').value;
-            const date = document.getElementById('date').value;
-            const time = document.getElementById('time').value;
-            const paymentMethod = document.querySelector('input[name="Payment Method"]:checked').value;
-
-            const form = document.getElementById('bookingForm');
-            const submitButton = document.querySelector('.btn-primary[onclick="submitBooking()"]');
-            submitButton.disabled = true;
-            submitButton.textContent = 'Sending...';
-
-            const formData = new FormData(form);
-            fetch(form.action, {
-                method: 'POST',
-                body: formData,
-                headers: { 'Accept': 'application/json' }
-            }).then(response => {
-                if (!response.ok) throw new Error('Submission failed');
-                form.style.display = 'none';
-                document.getElementById('confirmation').classList.add('active');
-            }).catch(() => {
-                const errorDiv = document.getElementById('errorMessage');
-                errorDiv.textContent = 'Your request could not be sent. Please call or text 317-728-7537 to book your appointment.';
-                errorDiv.style.display = 'block';
-                submitButton.disabled = false;
-                submitButton.textContent = 'Submit Appointment Request';
-                return;
-            });
-
-            // Format date
-            const dateObj = new Date(date);
-            const formattedDate = dateObj.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-
-            // Build confirmation details
-            const details = `
-                <div class="detail-item">
-                    <span class="detail-label">Name:</span>
-                    <span class="detail-value">${name}</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Phone:</span>
-                    <span class="detail-value">${phone}</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Email:</span>
-                    <span class="detail-value">${email}</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Document Type:</span>
-                    <span class="detail-value">${docType}</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Estimated Notarial Acts:</span>
-                    <span class="detail-value">${numDocs}</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Location:</span>
-                    <span class="detail-value">${address}</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Date & Time:</span>
-                    <span class="detail-value">${formattedDate} at ${time}</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Total Cost:</span>
-                    <span class="detail-value">${window.bookingCost.total.toFixed(2)}</span>
-                </div>
-            `;
-
-            document.getElementById('confirmationDetails').innerHTML = details;
-
-            // Payment instructions
-            let paymentHTML = '';
-            if (paymentMethod === 'venmo') {
-                paymentHTML = `
-                    <div class="venmo-payment">
-                        <div>Venmo payment available after appointment confirmation</div>
-                        <div class="venmo-username">@KalieDTRE</div>
-                        <div>$${window.bookingCost.total.toFixed(2)}</div>
-                        <a href="https://venmo.com/KalieDTRE" target="_blank">Open Venmo</a>
-                    </div>
-                    <p style="font-size: 13px; color: #999; margin-top: 12px;">Please wait for appointment approval before sending payment. Your appointment is secured after payment is completed.</p>
-                `;
-            } else {
-                paymentHTML = `
-                    <div class="venmo-payment">
-                        <div>Credit/Debit Card — Square</div>
-                        <div class="venmo-username">$${window.bookingCost.total.toFixed(2)}</div>
-                        <div style="font-size: 13px; margin-top: 8px;">A secure card-payment link will be provided after your appointment time is approved.</div>
-                    </div>
-                    <p style="font-size: 13px; color: #999; margin-top: 12px;">For your security, card information is never entered directly on this booking page.</p>
-                `;
-            }
-
-            document.getElementById('paymentInstructions').innerHTML = paymentHTML;
-
-            // Scroll to confirmation
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+        // Before a normal FormSubmit POST, update calculated hidden fields.
+        document.getElementById('bookingForm').addEventListener('submit', function() {
+            updateCosts();
+            document.getElementById('submittedTravelFee').value = '$' + window.bookingCost.travelFee.toFixed(2);
+            document.getElementById('submittedTotal').value = '$' + window.bookingCost.total.toFixed(2);
+        });
 
         function resetForm() {
             document.getElementById('bookingForm').reset();
