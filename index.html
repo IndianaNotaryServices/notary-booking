@@ -482,10 +482,7 @@
             <p>Professional notarization at your location</p>
         </div>
 
-        <form id="bookingForm" action="https://formsubmit.co/IndianaNotaryServices@gmail.com" method="POST">
-            <input type="hidden" name="_subject" value="New Mobile Notary Appointment Request">
-            <input type="hidden" name="_template" value="table">
-            <input type="text" name="_honey" style="display:none">
+        <form id="bookingForm" action="https://script.google.com/macros/s/AKfycbw7ec0rDnFQ4kYEnRs5g9PTg1q623_G3HcbezohqkfR35O4RXOEQg9ezblkczOWbtE/exec" method="POST" target="submissionFrame">
             <!-- Pricing Summary -->
             <div class="pricing-summary">
                 <div class="pricing-item">
@@ -503,11 +500,11 @@
                 <h2>Your Information</h2>
                 <div class="form-group">
                     <label for="name">Full Name *</label>
-                    <input type="text" id="name" name="Customer Name" required>
+                    <input type="text" id="name" name="name" required>
                 </div>
                 <div class="form-group">
                     <label for="phone">Phone Number *</label>
-                    <input type="tel" id="phone" name="Phone" required>
+                    <input type="tel" id="phone" name="phone" required>
                 </div>
                 <div class="form-group">
                     <label for="email">Email Address *</label>
@@ -520,7 +517,7 @@
                 <h2>Service Details</h2>
                 <div class="form-group">
                     <label for="docType">Document Type *</label>
-                    <select id="docType" name="Document Type" required>
+                    <select id="docType" name="docType" required>
                         <option value="">Select a document type</option>
                         <option value="Document Signing">Document Signing</option>
                         <option value="Loan Documents">Loan Documents</option>
@@ -532,7 +529,7 @@
                 </div>
                 <div class="form-group">
                     <label for="numDocs">Estimated Number of Notarial Acts *</label>
-                    <input type="number" id="numDocs" name="Estimated Number of Notarial Acts" min="1" value="1" required>
+                    <input type="number" id="numDocs" name="numActs" min="1" value="1" required>
                     <div class="distance-calc"><p>This is an estimate for booking purposes. The final notarization charge depends on the actual number of notarial acts performed.</p></div>
                 </div>
             </div>
@@ -542,11 +539,11 @@
                 <h2>Location & Travel</h2>
                 <div class="form-group">
                     <label for="address">Where should I meet you? *</label>
-                    <textarea id="address" name="Service Location" rows="3" placeholder="Street address, city, state" required></textarea>
+                    <textarea id="address" name="address" rows="3" placeholder="Street address, city, state" required></textarea>
                 </div>
                 <div class="form-group">
                     <label for="distance">Approximate Distance from 46126 (in miles) *</label>
-                    <input type="number" id="distance" name="Approximate Distance (miles)" min="0" max="20" value="0" step="0.1" required>
+                    <input type="number" id="distance" name="distance" min="0" max="20" value="0" step="0.1" required>
                     <div class="distance-calc">
                         <p>Travel fee: <span class="value" id="travelFee">$0.00</span></p>
                         <p style="font-size: 12px; margin-top: 4px; color: #999;">Must be within 20 miles of 46126</p>
@@ -559,11 +556,11 @@
                 <h2>Preferred Date & Time</h2>
                 <div class="form-group">
                     <label for="date">Date *</label>
-                    <input type="date" id="date" name="Requested Date" required>
+                    <input type="date" id="date" name="date" required>
                 </div>
                 <div class="form-group">
                     <label for="time">Time *</label>
-                    <input type="time" id="time" name="Requested Time" required>
+                    <input type="time" id="time" name="time" required>
                 </div>
                 <div class="hours-info">
                     <strong>Operating Hours:</strong>
@@ -596,28 +593,29 @@
                 <h2>Payment Method</h2>
                 <div class="payment-option selected" data-method="venmo">
                     <label>
-                        <input type="radio" name="Payment Method" value="Venmo" checked>
+                        <input type="radio" name="payment" value="Venmo" checked>
                         <strong>Venmo (Preferred)</strong>
                     </label>
                 </div>
                 <div class="payment-option" data-method="card">
                     <label>
-                        <input type="radio" name="Payment Method" value="Credit/Debit Card">
+                        <input type="radio" name="payment" value="Credit/Debit Card">
                         <strong>Credit/Debit Card — Secure payment through Square</strong>
                     </label>
                 </div>
                 <div class="distance-calc"><p><strong>Cash is not accepted.</strong> Payment is made electronically after your appointment time is approved.</p></div>
             </div>
 
-            <input type="hidden" id="submittedTravelFee" name="Estimated Travel Fee" value="$0.00">
-            <input type="hidden" id="submittedTotal" name="Estimated Total" value="$10.00">
+            <input type="hidden" id="submittedTravelFee" name="travelFee" value="$0.00">
+            <input type="hidden" id="submittedTotal" name="estimatedTotal" value="$10.00">
 
             <!-- Action Buttons -->
             <div class="button-group">
                 <button type="button" class="btn-secondary" onclick="resetForm()">Clear</button>
                 <button type="submit" class="btn-primary">Submit Appointment Request</button>
             </div>
-        </div>
+        </form>
+        <iframe name="submissionFrame" id="submissionFrame" style="display:none;"></iframe>
 
         <!-- Confirmation Screen -->
         <div class="confirmation" id="confirmation">
@@ -654,8 +652,8 @@
             document.getElementById('travelFee').textContent = '$' + travelFee.toFixed(2);
             document.getElementById('mileCost').textContent = '$' + travelFee.toFixed(2);
             document.getElementById('totalCost').textContent = '$' + total.toFixed(2);
-            document.getElementById('submittedTravelFee').value = '$' + travelFee.toFixed(2);
-            document.getElementById('submittedTotal').value = '$' + total.toFixed(2);
+            document.getElementById('submittedTravelFee').value = travelFee.toFixed(2);
+            document.getElementById('submittedTotal').value = total.toFixed(2);
 
             // Store for later
             window.bookingCost = {
@@ -748,11 +746,25 @@
             return true;
         }
 
-        // Before a normal FormSubmit POST, update calculated hidden fields.
-        document.getElementById('bookingForm').addEventListener('submit', function() {
+        // Submit the booking to Google Apps Script in the background.
+        let bookingSubmitted = false;
+        document.getElementById('bookingForm').addEventListener('submit', function(event) {
+            if (!validateForm()) {
+                event.preventDefault();
+                return;
+            }
             updateCosts();
-            document.getElementById('submittedTravelFee').value = '$' + window.bookingCost.travelFee.toFixed(2);
-            document.getElementById('submittedTotal').value = '$' + window.bookingCost.total.toFixed(2);
+            document.getElementById('submittedTravelFee').value = window.bookingCost.travelFee.toFixed(2);
+            document.getElementById('submittedTotal').value = window.bookingCost.total.toFixed(2);
+            bookingSubmitted = true;
+        });
+
+        document.getElementById('submissionFrame').addEventListener('load', function() {
+            if (!bookingSubmitted) return;
+            document.getElementById('bookingForm').style.display = 'none';
+            document.getElementById('confirmation').classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            bookingSubmitted = false;
         });
 
         function resetForm() {
