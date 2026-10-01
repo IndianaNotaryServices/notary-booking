@@ -484,7 +484,7 @@
             <p>Serving Fairland, Indiana & surrounding areas</p>
         </div>
 
-        <form id="bookingForm" action="https://script.google.com/macros/s/AKfycbw7ec0rDnFQ4kYEnRs5g9PTg1q623_G3HcbezohqkfR35O4RXOEQg9ezblkczOWbtE/exec" method="POST" target="submissionFrame">
+        <form id="bookingForm" action="https://script.google.com/macros/s/AKfycbw7ec0rDnFQ4kYEnRs5g9PTg1q623_G3HcbezohqkfR35O4RXOEQg9ezblkczOWbtE/exec" method="POST">
             <!-- Pricing Summary -->
             <div class="pricing-summary">
                 <div class="pricing-item">
@@ -617,7 +617,6 @@
                 <button type="submit" class="btn-primary">Submit Appointment Request</button>
             </div>
         </form>
-        <iframe name="submissionFrame" id="submissionFrame" style="display:none;"></iframe>
 
         <!-- Confirmation Screen -->
         <div class="confirmation" id="confirmation">
@@ -748,25 +747,41 @@
             return true;
         }
 
-        // Submit the booking to Google Apps Script in the background.
-        let bookingSubmitted = false;
-        document.getElementById('bookingForm').addEventListener('submit', function(event) {
-            if (!validateForm()) {
-                event.preventDefault();
-                return;
-            }
+        // Submit directly to the deployed Google Apps Script endpoint.
+        // no-cors is intentional: Apps Script accepts the POST, while the browser
+        // does not need permission to read Google's response.
+        document.getElementById('bookingForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            if (!validateForm()) return;
+
             updateCosts();
             document.getElementById('submittedTravelFee').value = window.bookingCost.travelFee.toFixed(2);
             document.getElementById('submittedTotal').value = window.bookingCost.total.toFixed(2);
-            bookingSubmitted = true;
-        });
 
-        document.getElementById('submissionFrame').addEventListener('load', function() {
-            if (!bookingSubmitted) return;
-            document.getElementById('bookingForm').style.display = 'none';
-            document.getElementById('confirmation').classList.add('active');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            bookingSubmitted = false;
+            const form = event.currentTarget;
+            const submitButton = form.querySelector('button[type="submit"]');
+            const originalText = submitButton.textContent;
+            submitButton.disabled = true;
+            submitButton.textContent = 'Sending Request...';
+
+            try {
+                const formData = new FormData(form);
+                await fetch(form.action, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    body: new URLSearchParams(formData)
+                });
+
+                document.getElementById('bookingForm').style.display = 'none';
+                document.getElementById('confirmation').classList.add('active');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } catch (error) {
+                const errorDiv = document.getElementById('errorMessage');
+                errorDiv.textContent = 'Your request could not be sent. Please call or text 317-728-7537.';
+                errorDiv.style.display = 'block';
+                submitButton.disabled = false;
+                submitButton.textContent = originalText;
+            }
         });
 
         function resetForm() {
