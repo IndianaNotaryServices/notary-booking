@@ -1,0 +1,72 @@
+{
+  "name": "Indiana Notary Services - Mobile Notary Booking",
+  "short_name": "Notary Booking",
+  "description": "Book mobile notary services in Fairland, Indiana. Convenient appointments for real estate, vehicle, and general documents.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#062f49",
+  "background_color": "#ffffff",
+  "screenshots": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 540 720'><rect fill='%23f7ead6' width='540' height='720'/><rect fill='%23062f49' width='540' height='100'/><text x='270' y='50' font-size='32' font-weight='bold' fill='%23fff' text-anchor='middle' dominant-baseline='central'>Indiana Notary</text><rect x='30' y='150' width='480' height='500' rx='10' fill='%23fff' stroke='%23dbe8ea' stroke-width='2'/></svg>",
+      "sizes": "540x720",
+      "type": "image/svg+xml",
+      "form_factor": "narrow"
+    }
+  ],
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%23062f49' width='192' height='192'/><text x='96' y='96' font-size='120' font-weight='bold' fill='%23fff' text-anchor='middle' dominant-baseline='central'>N</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%23062f49' width='192' height='192' rx='45'/><text x='96' y='96' font-size='120' font-weight='bold' fill='%23fff' text-anchor='middle' dominant-baseline='central'>N</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "categories": ["business", "productivity"],
+  "shortcuts": [
+    {
+      "name": "Book Appointment",
+      "short_name": "Book",
+      "description": "Request a mobile notary appointment",
+      "url": "/book.html?utm_source=pwa_shortcut",
+      "icons": [
+        {
+          "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'><rect fill='%231195a8' width='96' height='96' rx='20'/><text x='48' y='48' font-size='60' font-weight='bold' fill='%23fff' text-anchor='middle' dominant-baseline='central'>+</text></svg>",
+          "sizes": "96x96",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "Contact Us",
+      "short_name": "Contact",
+      "description": "Get our contact information",
+      "url": "/index.html#contact?utm_source=pwa_shortcut",
+      "icons": [
+        {
+          "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'><rect fill='%23d6ad68' width='96' height='96' rx='20'/><text x='48' y='48' font-size='60' font-weight='bold' fill='%23062f49' text-anchor='middle' dominant-baseline='central'>☎</text></svg>",
+          "sizes": "96x96",
+          "type": "image/svg+xml"
+        }
+      ]
+    }
+  ],
+  "share_target": {
+    "action": "/share",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  }
+}

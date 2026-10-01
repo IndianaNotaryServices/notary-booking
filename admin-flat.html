@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Admin dashboard for notary bookings">
+<title>Admin | Indiana Notary Services</title>
+<style>
+:root{--navy:#062f49;--teal:#1195a8;--gold:#d6ad68;--ink:#082d47;--muted:#526879;--white:#fff;--light-gray:#f9fbfb;--border:#dbe8ea}*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}body{font-family:"Segoe UI",Arial,sans-serif;color:var(--ink);background:var(--light-gray);line-height:1.6}.wrap{max-width:1200px;margin:auto;padding:0 24px}.header{background:var(--navy);color:var(--white);padding:20px 0;border-bottom:1px solid rgba(0,0,0,0.1)}.header-content{display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{display:flex;flex-direction:column;gap:2px}.brand-label{font-family:"Segoe Script","Brush Script MT",cursive;font-size:18px;color:var(--teal)}.brand-title{font-family:Georgia,serif;font-size:14px;letter-spacing:3px;font-weight:800}.logout-btn{background:var(--gold);color:var(--navy);border:none;padding:8px 16px;border-radius:4px;cursor:pointer;font-weight:600;font-size:12px}.login-page{display:flex;align-items:center;justify-content:center;min-height:100vh;background:var(--light-gray)}.login-card{background:var(--white);padding:40px;border-radius:8px;border:1px solid var(--border);max-width:380px;box-shadow:0 2px 8px rgba(6,47,73,0.08)}.login-title{font-family:Georgia,serif;color:var(--navy);font-size:24px;margin-bottom:8px;letter-spacing:0.5px}.login-desc{color:var(--muted);font-size:13px;margin-bottom:24px}.form-group{margin-bottom:16px}.form-label{display:block;font-weight:600;color:var(--navy);margin-bottom:6px;font-size:13px}.form-input{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:4px;font-size:14px;font-family:inherit}.form-input:focus{outline:none;border-color:var(--teal);background:rgba(17,149,168,0.02)}.login-btn{width:100%;padding:11px;background:var(--teal);color:var(--white);border:none;border-radius:4px;font-weight:600;cursor:pointer;font-size:14px;transition:background 0.2s}.login-btn:hover{background:#0d7f92}.error{background:#ffebee;color:#c62828;padding:12px;border-radius:4px;margin-bottom:16px;font-size:13px;display:none}.dashboard{padding:30px 0}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:30px}.stat-card{background:var(--white);padding:20px;border-radius:8px;border:1px solid var(--border)}.stat-label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;font-weight:600;margin-bottom:10px}.stat-value{font-family:Georgia,serif;font-size:32px;color:var(--navy);font-weight:600}.filters{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap}.filter-input,.filter-select{padding:10px 12px;border:1px solid var(--border);border-radius:4px;font-size:13px;font-family:inherit;background:var(--white)}.filter-input:focus,.filter-select:focus{outline:none;border-color:var(--teal)}.filter-input{flex:1;min-width:200px}.section-title{font-family:Georgia,serif;color:var(--navy);font-size:22px;margin:30px 0 16px;letter-spacing:0.5px}.table{width:100%;background:var(--white);border-collapse:collapse;border:1px solid var(--border);border-radius:8px;overflow:hidden}.table thead{background:var(--navy);color:var(--white)}.table th{padding:12px 14px;text-align:left;font-weight:600;font-size:12px;letter-spacing:0.5px;text-transform:uppercase}.table td{padding:12px 14px;border-bottom:1px solid var(--border);font-size:13px}.table tbody tr:hover{background:rgba(17,149,168,0.02)}.table a{color:var(--teal);text-decoration:none;font-weight:500}.table a:hover{text-decoration:underline}.status-badge{display:inline-block;padding:4px 8px;border-radius:3px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px}.status-pending{background:rgba(245,124,0,0.1);color:#f57c00}.status-confirmed{background:rgba(76,175,80,0.1);color:#4caf50}.empty{text-align:center;padding:40px 20px;color:var(--muted);font-size:13px}.footer{text-align:center;color:var(--muted);font-size:12px;padding:20px 0;border-top:1px solid var(--border);margin-top:40px}@media(max-width:1024px){.stats{grid-template-columns:repeat(2,1fr)}.table{font-size:12px}.table th,.table td{padding:10px}}@media(max-width:640px){.stats{grid-template-columns:1fr}.filters{flex-direction:column}.filter-input{width:100%}}
+</style>
+</head>
+<body>
+
+<div id="loginPage" class="login-page">
+  <div class="login-card">
+    <h1 class="login-title">Admin Access</h1>
+    <p class="login-desc">Enter your admin token to view bookings</p>
+    <div class="error" id="loginError"></div>
+    <form id="loginForm">
+      <div class="form-group">
+        <label class="form-label">Admin Token</label>
+        <input type="password" class="form-input" id="adminToken" placeholder="Enter token" required>
+      </div>
+      <button type="submit" class="login-btn">Login</button>
+    </form>
+  </div>
+</div>
+
+<div id="dashboardPage" style="display:none">
+  <header class="header">
+    <div class="wrap header-content">
+      <div class="brand">
+        <span class="brand-label">Admin</span>
+        <span class="brand-title">DASHBOARD</span>
+      </div>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+  </header>
+
+  <main class="dashboard">
+    <div class="wrap">
+      <div class="stats">
+        <div class="stat-card">
+          <div class="stat-label">Total Bookings</div>
+          <div class="stat-value" id="totalStat">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Pending</div>
+          <div class="stat-value" id="pendingStat">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Confirmed</div>
+          <div class="stat-value" id="confirmedStat">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Total Revenue</div>
+          <div class="stat-value" id="revenueStat">$0</div>
+        </div>
+      </div>
+
+      <div class="filters">
+        <input type="text" class="filter-input" id="searchFilter" placeholder="Search name or email..." onkeyup="filterBookings()">
+        <select class="filter-select" id="statusFilter" onchange="filterBookings()">
+          <option value="">All Status</option>
+          <option value="pending">Pending</option>
+          <option value="confirmed">Confirmed</option>
+        </select>
+      </div>
+
+      <h2 class="section-title">All Bookings</h2>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Client</th>
+            <th>Phone</th>
+            <th>Address</th>
+            <th>Docs</th>
+            <th>Cost</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="bookingsBody">
+          <tr><td colspan="8" class="empty">Loading...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap">© 2026 Indiana Notary Services</div>
+  </footer>
+</div>
+
+<script>
+  let currentToken = null;
+  let allBookings = [];
+
+  // Check if logged in
+  window.addEventListener('load', () => {
+    const token = localStorage.getItem('adminToken');
+    if (token) {
+      currentToken = token;
+      loadBookings();
+    }
+  });
+
+  // Login
+  document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const token = document.getElementById('adminToken').value;
+    
+    try {
+      const response = await fetch('/api/bookings', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+
+      if (response.ok) {
+        currentToken = token;
+        localStorage.setItem('adminToken', token);
+        document.getElementById('loginPage').style.display = 'none';
+        document.getElementById('dashboardPage').style.display = 'block';
+        loadBookings();
+      } else {
+        showError('Invalid token');
+      }
+    } catch (error) {
+      showError('Login failed');
+    }
+  });
+
+  async function loadBookings() {
+    try {
+      const response = await fetch('/api/bookings', {
+        headers: { 'Authorization': `Bearer ${currentToken}` }
+      });
+
+      if (!response.ok) {
+        logout();
+        return;
+      }
+
+      const data = await response.json();
+      allBookings = data.bookings || [];
+      updateStats();
+      renderBookings(allBookings);
+    } catch (error) {
+      console.error('Load failed:', error);
+    }
+  }
+
+  function updateStats() {
+    const total = allBookings.length;
+    const pending = allBookings.filter(b => b.status === 'pending').length;
+    const confirmed = allBookings.filter(b => b.status === 'confirmed').length;
+    const revenue = allBookings.reduce((sum, b) => sum + (b.estimatedCost || 0), 0);
+
+    document.getElementById('totalStat').textContent = total;
+    document.getElementById('pendingStat').textContent = pending;
+    document.getElementById('confirmedStat').textContent = confirmed;
+    document.getElementById('revenueStat').textContent = '$' + revenue.toFixed(0);
+  }
+
+  function renderBookings(bookings) {
+    const tbody = document.getElementById('bookingsBody');
+    
+    if (bookings.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="8" class="empty">No bookings yet</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = bookings.map(b => {
+      const date = new Date(b.preferredDate).toLocaleDateString();
+      const status = (b.status || 'pending').charAt(0).toUpperCase() + (b.status || 'pending').slice(1);
+      const statusClass = b.status === 'pending' ? 'status-pending' : 'status-confirmed';
+      return `
+        <tr>
+          <td>${date} ${b.preferredTime}</td>
+          <td>${b.clientName}</td>
+          <td><a href="tel:${b.clientPhone}">${b.clientPhone}</a></td>
+          <td>${b.serviceAddress}</td>
+          <td>${b.documentCount}</td>
+          <td>$${(b.estimatedCost || 0).toFixed(2)}</td>
+          <td><span class="status-badge ${statusClass}">${status}</span></td>
+          <td><a href="mailto:${b.clientEmail}">Email</a></td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  function filterBookings() {
+    const search = document.getElementById('searchFilter').value.toLowerCase();
+    const status = document.getElementById('statusFilter').value;
+
+    const filtered = allBookings.filter(b => {
+      const matchSearch = b.clientName.toLowerCase().includes(search) || b.clientEmail.toLowerCase().includes(search);
+      const matchStatus = !status || b.status === status;
+      return matchSearch && matchStatus;
+    });
+
+    renderBookings(filtered);
+  }
+
+  function logout() {
+    currentToken = null;
+    localStorage.removeItem('adminToken');
+    document.getElementById('dashboardPage').style.display = 'none';
+    document.getElementById('loginPage').style.display = 'block';
+  }
+
+  function showError(msg) {
+    const err = document.getElementById('loginError');
+    err.textContent = msg;
+    err.style.display = 'block';
+    setTimeout(() => err.style.display = 'none', 4000);
+  }
+
+  // Auto-refresh
+  setInterval(() => {
+    if (currentToken) loadBookings();
+  }, 30000);
+</script>
+</body>
+</html>
